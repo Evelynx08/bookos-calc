@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+<link rel="stylesheet" href="style.css">
+<title>Calculadora</title>
+</head>
+<body>
+<div class="main-container windowed" id="mc">
+  <div class="titlebar" data-tauri-drag-region>
+    <div class="tb-left" data-tauri-drag-region>
+      <span class="tb-title" id="tb-title">Calculadora</span>
+      <button class="mode-chip" id="mode-chip" title="Cambiar modo" aria-label="Cambiar modo">
+        <span id="mode-chip-label">Estándar</span>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="mode-menu hidden" id="mode-menu" role="menu">
+        <button data-mode="standard" role="menuitem">Estándar</button>
+        <button data-mode="scientific" role="menuitem">Científica</button>
+        <button data-mode="currency" role="menuitem">Monetaria</button>
+        <button data-mode="units" role="menuitem">Unidades</button>
+      </div>
+    </div>
+    <div class="tb-right">
+      <button id="settings-btn" class="tb-icon-btn" title="Ajustes" aria-label="Ajustes">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+      <button id="history-btn" class="tb-icon-btn" title="Historial" aria-label="Historial">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 2"/></svg>
+      </button>
+      <button id="fullscreen-btn" class="tb-icon-btn" title="Pantalla completa" aria-label="Pantalla completa">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+      </button>
+      <button id="theme-btn" class="tb-icon-btn" title="Tema" aria-label="Cambiar tema">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </button>
+      <div class="controls">
+        <button id="minimize" title="Minimizar">─</button>
+        <button id="maximize" title="Maximizar">☐</button>
+        <button id="close" title="Cerrar">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-wrap" id="page-wrap">
+    <div class="page page-calc" id="page-calc">
+     <div class="calc-frame">
+      <div class="display-card">
+        <div class="display-wrap">
+          <div class="display-expr" id="display-expr"></div>
+          <div class="display-result" id="display-result">0</div>
+        </div>
+      </div>
+      <div class="keypad" id="keypad">
+        <button class="key key-fn" data-k="C" aria-label="Limpiar">C</button>
+        <button class="key key-fn" data-k="±" aria-label="Cambiar signo">±</button>
+        <button class="key key-fn" data-k="%" aria-label="Porcentaje">%</button>
+        <button class="key key-op" data-k="÷" aria-label="Dividir">÷</button>
+
+        <button class="key" data-k="7" aria-label="Siete">7</button>
+        <button class="key" data-k="8" aria-label="Ocho">8</button>
+        <button class="key" data-k="9" aria-label="Nueve">9</button>
+        <button class="key key-op" data-k="×" aria-label="Multiplicar">×</button>
+
+        <button class="key" data-k="4" aria-label="Cuatro">4</button>
+        <button class="key" data-k="5" aria-label="Cinco">5</button>
+        <button class="key" data-k="6" aria-label="Seis">6</button>
+        <button class="key key-op" data-k="−" aria-label="Restar">−</button>
+
+        <button class="key" data-k="1" aria-label="Uno">1</button>
+        <button class="key" data-k="2" aria-label="Dos">2</button>
+        <button class="key" data-k="3" aria-label="Tres">3</button>
+        <button class="key key-op" data-k="+" aria-label="Sumar">+</button>
+
+        <button class="key key-back" data-k="⌫" aria-label="Borrar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 5H8.5L3 12l5.5 7H21a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1z"/><path d="M18 9l-6 6M12 9l6 6"/></svg>
+        </button>
+        <button class="key" data-k="0" aria-label="Cero">0</button>
+        <button class="key" data-k="." aria-label="Coma decimal">.</button>
+        <button class="key key-eq" data-k="=" aria-label="Igual">=</button>
+      </div>
+     </div>
+    </div>
+
+    <div class="page page-scientific hidden" id="page-scientific">
+     <div class="calc-frame calc-frame-wide">
+      <div class="display-card">
+        <div class="display-wrap">
+          <div class="display-expr" id="sci-expr"></div>
+          <div class="display-result" id="sci-result">0</div>
+        </div>
+      </div>
+      <div class="keypad keypad-sci" id="keypad-sci">
+        <button class="key key-fn small" data-k="deg" id="sci-deg">DEG</button>
+        <button class="key key-fn small" data-k="sin">sin</button>
+        <button class="key key-fn small" data-k="cos">cos</button>
+        <button class="key key-fn small" data-k="tan">tan</button>
+        <button class="key key-fn small" data-k="ln">ln</button>
+        <button class="key key-fn small" data-k="log">log</button>
+
+        <button class="key key-fn small" data-k="(">(</button>
+        <button class="key key-fn small" data-k=")">)</button>
+        <button class="key key-fn small" data-k="π">π</button>
+        <button class="key key-fn small" data-k="e">e</button>
+        <button class="key key-fn small" data-k="x²">x²</button>
+        <button class="key key-fn small" data-k="xʸ">xʸ</button>
+
+        <button class="key key-fn small" data-k="√">√</button>
+        <button class="key key-fn small" data-k="1/x">1/x</button>
+        <button class="key key-fn small" data-k="!">n!</button>
+        <button class="key key-fn small" data-k="C">C</button>
+        <button class="key key-fn small" data-k="±">±</button>
+        <button class="key key-op small" data-k="÷">÷</button>
+
+        <button class="key key-fn small" data-k="abs">|x|</button>
+        <button class="key" data-k="7">7</button>
+        <button class="key" data-k="8">8</button>
+        <button class="key" data-k="9">9</button>
+        <button class="key key-fn small" data-k="%">%</button>
+        <button class="key key-op small" data-k="×">×</button>
+
+        <button class="key key-fn small" data-k="exp">EXP</button>
+        <button class="key" data-k="4">4</button>
+        <button class="key" data-k="5">5</button>
+        <button class="key" data-k="6">6</button>
+        <button class="key key-back small" data-k="⌫">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 5H8.5L3 12l5.5 7H21a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1z"/><path d="M18 9l-6 6M12 9l6 6"/></svg>
+        </button>
+        <button class="key key-op small" data-k="−">−</button>
+
+        <button class="key key-fn small" data-k="mod">mod</button>
+        <button class="key" data-k="1">1</button>
+        <button class="key" data-k="2">2</button>
+        <button class="key" data-k="3">3</button>
+        <button class="key" data-k=".">.</button>
+        <button class="key key-op small" data-k="+">+</button>
+
+        <button class="key key-fn small" data-k="ans">Ans</button>
+        <button class="key" data-k="0">0</button>
+        <button class="key key-fn small" data-k="ee">·10ⁿ</button>
+        <button class="key" data-k="00">00</button>
+        <button class="key key-eq small" data-k="=" style="grid-column:span 2">=</button>
+      </div>
+     </div>
+    </div>
+
+    <div class="page page-currency hidden" id="page-currency">
+      <div class="conv-frame">
+        <h2 class="page-title">Monetaria</h2>
+
+        <div class="conv-card">
+          <div class="conv-row">
+            <select class="conv-pick" id="cur-from"></select>
+            <input class="conv-num" id="cur-from-val" type="text" inputmode="decimal" value="1">
+          </div>
+          <div class="conv-arrow">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h13"/><path d="M16 3l4 4-4 4"/><path d="M17 17H4"/><path d="M8 21l-4-4 4-4"/></svg>
+          </div>
+          <div class="conv-row">
+            <select class="conv-pick" id="cur-to"></select>
+            <input class="conv-num" id="cur-to-val" type="text" inputmode="decimal" readonly>
+          </div>
+        </div>
+
+        <div class="section-header-row">
+          <div class="section-header">Tasas (base USD)</div>
+          <button class="refresh-btn" id="rate-add" title="Añadir divisa">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span>Añadir</span>
+          </button>
+        </div>
+        <div class="detail-card" id="rate-list"></div>
+        <div class="ds" style="text-align:center;margin-top:14px;opacity:.5;font-size:11px">Tasas editables manualmente. Sin red.</div>
+      </div>
+    </div>
+
+    <div class="page page-units hidden" id="page-units">
+      <div class="conv-frame">
+        <h2 class="page-title">Unidades</h2>
+
+        <div class="seg seg-wide" id="seg-unit-cat" data-key="unitcat">
+          <button data-v="length">Longitud</button>
+          <button data-v="mass">Masa</button>
+          <button data-v="temperature">Temp.</button>
+          <button data-v="volume">Volumen</button>
+          <button data-v="area">Área</button>
+          <button data-v="time">Tiempo</button>
+        </div>
+
+        <div class="conv-card" style="margin-top:14px">
+          <div class="conv-row">
+            <select class="conv-pick" id="unit-from"></select>
+            <input class="conv-num" id="unit-from-val" type="text" inputmode="decimal" value="1">
+          </div>
+          <div class="conv-arrow">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h13"/><path d="M16 3l4 4-4 4"/><path d="M17 17H4"/><path d="M8 21l-4-4 4-4"/></svg>
+          </div>
+          <div class="conv-row">
+            <select class="conv-pick" id="unit-to"></select>
+            <input class="conv-num" id="unit-to-val" type="text" inputmode="decimal" readonly>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page page-settings hidden" id="page-settings">
+      <div class="settings-frame">
+        <h2 class="page-title">Ajustes</h2>
+
+        <div class="section-header">Apariencia</div>
+        <div class="detail-card">
+          <div class="detail-item detail-item-row">
+            <div class="detail-texts"><div class="dt">Tema</div><div class="ds">Sigue al sistema cuando es Automático</div></div>
+            <div class="seg" id="seg-theme" data-key="theme">
+              <button data-v="auto">Auto</button><button data-v="light">Claro</button><button data-v="dark">Oscuro</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header">Calculadora</div>
+        <div class="detail-card">
+          <div class="detail-item detail-item-row">
+            <div class="detail-texts"><div class="dt">Tipo</div><div class="ds">Más modos próximamente</div></div>
+            <div class="seg seg-wide" id="seg-mode" data-key="mode">
+              <button data-v="standard">Estándar</button>
+              <button data-v="scientific">Científica</button>
+              <button data-v="currency">Monetaria</button>
+              <button data-v="units">Unidades</button>
+            </div>
+          </div>
+          <div class="detail-item detail-item-row">
+            <div class="detail-texts"><div class="dt">Precisión decimal</div><div class="ds">Dígitos significativos en resultado</div></div>
+            <div class="seg" id="seg-precision" data-key="precision">
+              <button data-v="6">6</button><button data-v="10">10</button><button data-v="12">12</button>
+            </div>
+          </div>
+          <div class="detail-item detail-item-row">
+            <div class="detail-texts"><div class="dt">Separador de miles</div><div class="ds">Formato 1,234,567.89</div></div>
+            <div class="toggle-switch" id="tg-thousands" role="switch" tabindex="0" aria-label="Separador de miles"></div>
+          </div>
+          <div class="detail-item detail-item-row">
+            <div class="detail-texts"><div class="dt">Sonido de tecla</div><div class="ds">Tono suave al pulsar</div></div>
+            <div class="toggle-switch" id="tg-sound" role="switch" tabindex="0" aria-label="Sonido de tecla"></div>
+          </div>
+        </div>
+
+        <div class="section-header">Datos</div>
+        <div class="detail-card">
+          <div class="detail-item detail-item-row clickable" id="row-clear-hist">
+            <div class="detail-texts"><div class="dt" style="color:var(--red)">Limpiar historial</div><div class="ds"><span id="hist-count">0</span> entradas guardadas</div></div>
+          </div>
+        </div>
+
+        <div class="section-header">Acerca de</div>
+        <div class="detail-card">
+          <div class="detail-item detail-item-row">
+            <div class="detail-texts"><div class="dt">Bookos Calc</div><div class="ds">Versión 0.1.0 · BookOS</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page page-history hidden" id="page-history">
+      <div class="hist-header">
+        <h2 class="page-title">Historial</h2>
+        <button class="hist-clear" id="hist-clear" title="Limpiar historial">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          <span>Limpiar</span>
+        </button>
+      </div>
+      <div class="hist-list" id="hist-list"></div>
+      <div class="hist-empty" id="hist-empty">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 2"/></svg>
+        <span>Sin operaciones aún</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="main.js" type="module"></script>
+</body>
+</html>
