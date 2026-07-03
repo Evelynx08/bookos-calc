@@ -15,7 +15,8 @@ const DEFAULT_SETTINGS = {
   rateTo: 'EUR',
   unitCat: 'length',
   unitFrom: null,
-  unitTo: null
+  unitTo: null,
+  uiLang: 'auto'
 };
 const DEFAULT_RATES = {
   USD: { name: 'Dólar estadounidense', rate: 1 },
@@ -70,6 +71,7 @@ async function loadState() {
   if (!state.settings.rates || typeof state.settings.rates !== 'object') {
     state.settings.rates = JSON.parse(JSON.stringify(DEFAULT_RATES));
   }
+  if (window.BookosI18n) BookosI18n.setLang(state.settings.uiLang || 'auto');
 }
 async function saveState() { try { await invoke('save_state', { state }); } catch(e){console.error(e);} }
 
@@ -127,15 +129,63 @@ function formatNumber(n) {
   return n.toString();
 }
 
+// Safe evaluator for + - * / chains (no Function/eval — CSP-safe).
+// Tokenizes the canonical string then applies precedence in two passes.
 function evalExpr(canon) {
   if (!canon) return null;
   let s = canon.replace(/[+\-*/]$/, '');
   if (!/^[\-]?[\d.]/.test(s)) return null;
-  try {
-    const v = Function('"use strict";return (' + s + ')')();
-    if (typeof v !== 'number' || isNaN(v)) return null;
-    return v;
-  } catch { return null; }
+
+  // Tokenize: numbers (with optional leading unary -) and operators.
+  const toks = [];
+  let i = 0;
+  while (i < s.length) {
+    const c = s[i];
+    if (c === ' ') { i++; continue; }
+    if (c === '+' || c === '-' || c === '*' || c === '/') {
+      const prev = toks[toks.length - 1];
+      const isUnary = c === '-' && (toks.length === 0 || (typeof prev === 'string' && '+-*/'.includes(prev)));
+      if (!isUnary) { toks.push(c); i++; continue; }
+      // fall through to read a negative number
+    }
+    // Number (possibly with leading minus for unary)
+    let j = i;
+    if (s[j] === '-' || s[j] === '+') j++;
+    let sawDigit = false, sawDot = false;
+    while (j < s.length) {
+      const d = s[j];
+      if (d >= '0' && d <= '9') { sawDigit = true; j++; }
+      else if (d === '.' && !sawDot) { sawDot = true; j++; }
+      else break;
+    }
+    if (!sawDigit) return null;
+    const n = parseFloat(s.slice(i, j));
+    if (!isFinite(n)) return null;
+    toks.push(n);
+    i = j;
+  }
+  if (!toks.length) return null;
+
+  // Pass 1: * /
+  for (let k = 1; k < toks.length - 1; ) {
+    const op = toks[k];
+    if (op === '*' || op === '/') {
+      const a = toks[k - 1], b = toks[k + 1];
+      if (typeof a !== 'number' || typeof b !== 'number') return null;
+      const r = op === '*' ? a * b : a / b;
+      if (!isFinite(r)) return null;
+      toks.splice(k - 1, 3, r);
+    } else { k += 2; }
+  }
+  // Pass 2: + -
+  let acc = toks[0];
+  for (let k = 1; k < toks.length; k += 2) {
+    const op = toks[k], b = toks[k + 1];
+    if (typeof acc !== 'number' || typeof b !== 'number') return null;
+    acc = op === '+' ? acc + b : acc - b;
+  }
+  if (typeof acc !== 'number' || isNaN(acc)) return null;
+  return acc;
 }
 
 function setDisplay() {
@@ -623,6 +673,15 @@ function wireSettingsPage() {
   };
   wireToggle('tg-thousands', 'thousands');
   wireToggle('tg-sound', 'keySound');
+  const langSel = $('#ui-lang');
+  if (langSel) {
+    langSel.value = state.settings.uiLang || 'auto';
+    langSel.addEventListener('change', () => {
+      state.settings.uiLang = langSel.value;
+      saveState();
+      if (window.BookosI18n) BookosI18n.setLang(langSel.value);
+    });
+  }
   // Clear history row
   $('#row-clear-hist').addEventListener('click', () => {
     if (!state.history.length) { toast('Historial ya está vacío'); return; }
@@ -907,13 +966,23 @@ function renderRateList() {
   for (const code of codes) {
     const row = document.createElement('div');
     row.className = 'rate-row';
+    // Sin innerHTML con datos del usuario: el nombre/código de una moneda
+    // añadida a mano no debe poder inyectar HTML en el webview.
     row.innerHTML = `
-      <div class="rate-code">${code}</div>
-      <div class="rate-name">${state.settings.rates[code].name}</div>
-      <input class="rate-val" type="text" inputmode="decimal" data-code="${code}" value="${state.settings.rates[code].rate}">
-      <button class="rate-del" data-code="${code}" title="Eliminar" aria-label="Eliminar ${code}">
+      <div class="rate-code"></div>
+      <div class="rate-name"></div>
+      <input class="rate-val" type="text" inputmode="decimal">
+      <button class="rate-del" title="Eliminar">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>`;
+    row.querySelector('.rate-code').textContent = code;
+    row.querySelector('.rate-name').textContent = state.settings.rates[code].name;
+    const inp = row.querySelector('.rate-val');
+    inp.dataset.code = code;
+    inp.value = state.settings.rates[code].rate;
+    const del = row.querySelector('.rate-del');
+    del.dataset.code = code;
+    del.setAttribute('aria-label', 'Eliminar ' + code);
     list.append(row);
   }
   list.querySelectorAll('.rate-val').forEach(i => {

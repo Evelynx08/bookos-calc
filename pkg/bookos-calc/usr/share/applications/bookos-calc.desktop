@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Bookos Calc
+Comment=Calculadora cientifica BookOS
+Exec=bookos-calc
+Icon=bookos-calc
+Type=Application
+Categories=Utility;Calculator;
+StartupNotify=true
+StartupWMClass=bookos-calc

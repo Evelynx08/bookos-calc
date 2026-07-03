@@ -5,40 +5,42 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
 <link rel="stylesheet" href="style.css">
 <title>Calculadora</title>
+<script src="locales.js"></script>
+<script src="i18n.js"></script>
 </head>
-<body>
+<body data-i18n-title="app.title">
 <div class="main-container windowed" id="mc">
   <div class="titlebar" data-tauri-drag-region>
     <div class="tb-left" data-tauri-drag-region>
-      <span class="tb-title" id="tb-title">Calculadora</span>
-      <button class="mode-chip" id="mode-chip" title="Cambiar modo" aria-label="Cambiar modo">
-        <span id="mode-chip-label">Estándar</span>
+      <span class="tb-title" id="tb-title" data-i18n="tb.calc">Calculadora</span>
+      <button class="mode-chip" id="mode-chip" data-i18n-title="tb.mode" title="Cambiar modo" aria-label="Cambiar modo">
+        <span id="mode-chip-label" data-i18n="mode.standard">Estándar</span>
         <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
       </button>
       <div class="mode-menu hidden" id="mode-menu" role="menu">
-        <button data-mode="standard" role="menuitem">Estándar</button>
-        <button data-mode="scientific" role="menuitem">Científica</button>
-        <button data-mode="currency" role="menuitem">Monetaria</button>
-        <button data-mode="units" role="menuitem">Unidades</button>
+        <button data-mode="standard" role="menuitem" data-i18n="mode.standard">Estándar</button>
+        <button data-mode="scientific" role="menuitem" data-i18n="mode.scientific">Científica</button>
+        <button data-mode="currency" role="menuitem" data-i18n="mode.currency">Monetaria</button>
+        <button data-mode="units" role="menuitem" data-i18n="mode.units">Unidades</button>
       </div>
     </div>
     <div class="tb-right">
-      <button id="settings-btn" class="tb-icon-btn" title="Ajustes" aria-label="Ajustes">
+      <button id="settings-btn" class="tb-icon-btn" data-i18n-title="tb.settings" title="Ajustes" aria-label="Ajustes">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
-      <button id="history-btn" class="tb-icon-btn" title="Historial" aria-label="Historial">
+      <button id="history-btn" class="tb-icon-btn" data-i18n-title="tb.history" title="Historial" aria-label="Historial">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 7v5l3 2"/></svg>
       </button>
-      <button id="fullscreen-btn" class="tb-icon-btn" title="Pantalla completa" aria-label="Pantalla completa">
+      <button id="fullscreen-btn" class="tb-icon-btn" data-i18n-title="tb.fullscreen" title="Pantalla completa" aria-label="Pantalla completa">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
       </button>
-      <button id="theme-btn" class="tb-icon-btn" title="Tema" aria-label="Cambiar tema">
+      <button id="theme-btn" class="tb-icon-btn" data-i18n-title="tb.theme" title="Tema" aria-label="Cambiar tema">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
       </button>
       <div class="controls">
-        <button id="minimize" title="Minimizar">─</button>
-        <button id="maximize" title="Maximizar">☐</button>
-        <button id="close" title="Cerrar">✕</button>
+        <button id="minimize" data-i18n-title="wm.minimize" title="Minimizar">─</button>
+        <button id="maximize" data-i18n-title="wm.maximize" title="Maximizar">☐</button>
+        <button id="close" data-i18n-title="wm.close" title="Cerrar">✕</button>
       </div>
     </div>
   </div>
@@ -147,7 +149,7 @@
 
     <div class="page page-currency hidden" id="page-currency">
       <div class="conv-frame">
-        <h2 class="page-title">Monetaria</h2>
+        <h2 class="page-title" data-i18n="page.currency">Monetaria</h2>
 
         <div class="conv-card">
           <div class="conv-row">
@@ -164,20 +166,20 @@
         </div>
 
         <div class="section-header-row">
-          <div class="section-header">Tasas (base USD)</div>
+          <div class="section-header" data-i18n="sec.rates">Tasas (base USD)</div>
           <button class="refresh-btn" id="rate-add" title="Añadir divisa">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
             <span>Añadir</span>
           </button>
         </div>
         <div class="detail-card" id="rate-list"></div>
-        <div class="ds" style="text-align:center;margin-top:14px;opacity:.5;font-size:11px">Tasas editables manualmente. Sin red.</div>
+        <div class="ds" data-i18n="sec.rates.ds" style="text-align:center;margin-top:14px;opacity:.5;font-size:11px">Tasas editables manualmente. Sin red.</div>
       </div>
     </div>
 
     <div class="page page-units hidden" id="page-units">
       <div class="conv-frame">
-        <h2 class="page-title">Unidades</h2>
+        <h2 class="page-title" data-i18n="page.units">Unidades</h2>
 
         <div class="seg seg-wide" id="seg-unit-cat" data-key="unitcat">
           <button data-v="length">Longitud</button>
@@ -206,56 +208,64 @@
 
     <div class="page page-settings hidden" id="page-settings">
       <div class="settings-frame">
-        <h2 class="page-title">Ajustes</h2>
+        <h2 class="page-title" data-i18n="page.settings">Ajustes</h2>
 
-        <div class="section-header">Apariencia</div>
+        <div class="section-header" data-i18n="sec.appearance">Apariencia</div>
         <div class="detail-card">
           <div class="detail-item detail-item-row">
-            <div class="detail-texts"><div class="dt">Tema</div><div class="ds">Sigue al sistema cuando es Automático</div></div>
+            <div class="detail-texts"><div class="dt" data-i18n="theme">Tema</div><div class="ds" data-i18n="theme.ds">Sigue al sistema cuando es Automático</div></div>
             <div class="seg" id="seg-theme" data-key="theme">
-              <button data-v="auto">Auto</button><button data-v="light">Claro</button><button data-v="dark">Oscuro</button>
+              <button data-v="auto" data-i18n="theme.auto">Auto</button><button data-v="light" data-i18n="theme.light">Claro</button><button data-v="dark" data-i18n="theme.dark">Oscuro</button>
             </div>
+          </div>
+          <div class="detail-item detail-item-row">
+            <div class="detail-texts"><div class="dt" data-i18n="ui.lang">Idioma de la interfaz</div><div class="ds" data-i18n="ui.lang.ds">Cambia el idioma de toda la aplicación</div></div>
+            <select id="ui-lang" class="mini-select">
+              <option value="auto">Auto</option>
+              <option value="es">Español</option>
+              <option value="en">English</option>
+            </select>
           </div>
         </div>
 
-        <div class="section-header">Calculadora</div>
+        <div class="section-header" data-i18n="sec.calc">Calculadora</div>
         <div class="detail-card">
           <div class="detail-item detail-item-row">
-            <div class="detail-texts"><div class="dt">Tipo</div><div class="ds">Más modos próximamente</div></div>
+            <div class="detail-texts"><div class="dt" data-i18n="type">Tipo</div><div class="ds" data-i18n="type.ds">Más modos próximamente</div></div>
             <div class="seg seg-wide" id="seg-mode" data-key="mode">
-              <button data-v="standard">Estándar</button>
-              <button data-v="scientific">Científica</button>
-              <button data-v="currency">Monetaria</button>
-              <button data-v="units">Unidades</button>
+              <button data-v="standard" data-i18n="mode.standard">Estándar</button>
+              <button data-v="scientific" data-i18n="mode.scientific">Científica</button>
+              <button data-v="currency" data-i18n="mode.currency">Monetaria</button>
+              <button data-v="units" data-i18n="mode.units">Unidades</button>
             </div>
           </div>
           <div class="detail-item detail-item-row">
-            <div class="detail-texts"><div class="dt">Precisión decimal</div><div class="ds">Dígitos significativos en resultado</div></div>
+            <div class="detail-texts"><div class="dt" data-i18n="precision">Precisión decimal</div><div class="ds" data-i18n="precision.ds">Dígitos significativos en resultado</div></div>
             <div class="seg" id="seg-precision" data-key="precision">
               <button data-v="6">6</button><button data-v="10">10</button><button data-v="12">12</button>
             </div>
           </div>
           <div class="detail-item detail-item-row">
-            <div class="detail-texts"><div class="dt">Separador de miles</div><div class="ds">Formato 1,234,567.89</div></div>
-            <div class="toggle-switch" id="tg-thousands" role="switch" tabindex="0" aria-label="Separador de miles"></div>
+            <div class="detail-texts"><div class="dt" data-i18n="thousands">Separador de miles</div><div class="ds" data-i18n="thousands.ds">Formato 1,234,567.89</div></div>
+            <div class="toggle-switch" id="tg-thousands" role="switch" tabindex="0"></div>
           </div>
           <div class="detail-item detail-item-row">
-            <div class="detail-texts"><div class="dt">Sonido de tecla</div><div class="ds">Tono suave al pulsar</div></div>
-            <div class="toggle-switch" id="tg-sound" role="switch" tabindex="0" aria-label="Sonido de tecla"></div>
+            <div class="detail-texts"><div class="dt" data-i18n="keysound">Sonido de tecla</div><div class="ds" data-i18n="keysound.ds">Tono suave al pulsar</div></div>
+            <div class="toggle-switch" id="tg-sound" role="switch" tabindex="0"></div>
           </div>
         </div>
 
-        <div class="section-header">Datos</div>
+        <div class="section-header" data-i18n="sec.data">Datos</div>
         <div class="detail-card">
           <div class="detail-item detail-item-row clickable" id="row-clear-hist">
-            <div class="detail-texts"><div class="dt" style="color:var(--red)">Limpiar historial</div><div class="ds"><span id="hist-count">0</span> entradas guardadas</div></div>
+            <div class="detail-texts"><div class="dt" data-i18n="clear.hist" style="color:var(--red)">Limpiar historial</div><div class="ds"><span id="hist-count">0</span> <span data-i18n="entries">entradas guardadas</span></div></div>
           </div>
         </div>
 
-        <div class="section-header">Acerca de</div>
+        <div class="section-header" data-i18n="sec.about">Acerca de</div>
         <div class="detail-card">
           <div class="detail-item detail-item-row">
-            <div class="detail-texts"><div class="dt">Bookos Calc</div><div class="ds">Versión 0.1.0 · BookOS</div></div>
+            <div class="detail-texts"><div class="dt">Bookos Calc</div><div class="ds" data-i18n="about.ds">Versión 0.1.0 · BookOS</div></div>
           </div>
         </div>
       </div>
@@ -263,8 +273,8 @@
 
     <div class="page page-history hidden" id="page-history">
       <div class="hist-header">
-        <h2 class="page-title">Historial</h2>
-        <button class="hist-clear" id="hist-clear" title="Limpiar historial">
+        <h2 class="page-title" data-i18n="page.history">Historial</h2>
+        <button class="hist-clear" id="hist-clear" data-i18n-title="clear.hist" title="Limpiar historial">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
           <span>Limpiar</span>
         </button>

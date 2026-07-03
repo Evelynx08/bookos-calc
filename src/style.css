@@ -219,3 +219,8 @@ body{font-family:'Onest','Inter','SF Pro Display',-apple-system,BlinkMacSystemFo
   .keypad .key-op{font-size:26px}
   .keypad .key-eq{font-size:28px;border-radius:22px}
 }
+
+/* mini-select for settings dropdowns */
+.mini-select{background:var(--sbg);border:0;color:var(--tx);font-family:inherit;font-size:12.5px;font-weight:500;padding:7px 30px 7px 12px;border-radius:9px;outline:0;cursor:pointer;max-width:240px;text-overflow:ellipsis;appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238e8e93' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.mini-select option{background:var(--card);color:var(--tx);padding:6px}
+.mini-select:focus{box-shadow:0 0 0 2px var(--blue) inset;background-color:var(--card)}
