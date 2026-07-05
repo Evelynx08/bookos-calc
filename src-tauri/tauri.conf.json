@@ -3,7 +3,7 @@
   "identifier": "com.bookos.calc",
   "productName": "Bookos Calc",
   "mainBinaryName": "bookos-calc",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "build": {
     "beforeDevCommand": "",
     "beforeBuildCommand": "",
